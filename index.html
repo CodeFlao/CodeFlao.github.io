@@ -1,183 +1,203 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>爱心</title>
-  <style>
-    *{margin:0; padding:0;}
-    body{ background-color: #1E1E1E;     }
-  </style>
+    <title>爱你噢，婷宝</title>
+    <style type="text/css">
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+			 background-color: #FCE8F8;
+        }
+
+        #snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .snowflake {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: snowfall linear infinite;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .heart {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            animation: heartbeat 1s infinite;
+            transform-origin: center center;
+        }
+
+        .heart:before,
+        .heart:after {
+            content: "";
+            background-color: red;
+            border-radius: 50px 50px 0 0;
+            position: absolute;
+            top: 0;
+        }
+
+        .heart:before {
+            left: 100px;
+            width: 100px;
+            height: 160px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart:after {
+            left: 0;
+            width: 100px;
+            height: 160px;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        #timeElapsed {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes falling {
+            0% {
+                transform: translateY(-100vh);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .sakura {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 40px;
+            height: 40px;
+            background-image: url('https://www.unicode.org/emoji/charts/full-emoji-list.html#1f338'); /* 🌸的Unicode转义序列 */
+            background-size: cover;
+            animation: falling linear infinite;
+            animation-duration: 10s;
+        }
+    </style>
 </head>
 <body>
- 
-  <canvas id="drawHeart"></canvas>
- 
-  <script>
-    var hearts = [];
-    var canvas = document.getElementById('drawHeart');
-    var wW = window.innerWidth;
-    var wH = window.innerHeight;
-    // 创建画布
-    var ctx = canvas.getContext('2d');
-    // 创建图片对象
-    var heartImage = new Image();
-    heartImage.src = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fgss0.baidu.com%2F-vo3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Fb21bb051f81986186b44770a48ed2e738bd4e639.jpg&refer=http%3A%2F%2Fgss0.baidu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1641477598&t=2165eac282333ad148983fb776b59f13';
-    var num = 100;
- 
-    init();
- 
-    window.addEventListener('resize', function(){
-       wW = window.innerWidth;
-       wH = window.innerHeight;
-    });
-    // 初始化画布大小
-    function init(){
-      canvas.width = wW;
-      canvas.height = wH;
-      for(var i = 0; i < num; i++){
-        hearts.push(new Heart(i%5));
-      }
-      requestAnimationFrame(render);
-    }
- 
-    function getColor(){
-      var val = Math.random() * 10;
-      if(val > 0 && val <= 1){
-        return '#00f';
-      } else if(val > 1 && val <= 2){
-        return '#f00';
-      } else if(val > 2 && val <= 3){
-        return '#0f0';
-      } else if(val > 3 && val <= 4){
-        return '#368';
-      } else if(val > 4 && val <= 5){
-        return '#666';
-      } else if(val > 5 && val <= 6){
-        return '#333';
-      } else if(val > 6 && val <= 7){
-        return '#f50';
-      } else if(val > 7 && val <= 8){
-        return '#e96d5b';
-      } else if(val > 8 && val <= 9){
-        return '#5be9e9';
-      } else {
-        return '#d41d50';
-      }
-    }
- 
-    function getText(){
-      var val = Math.random() * 10;
-      if(val > 1 && val <= 3){
-        return '爱你一辈子';
-      } else if(val > 3 && val <= 5){
-        return '感谢你';
-      } else if(val > 5 && val <= 8){
-        return '喜欢你';
-      } else{
-        return 'I Love You';
-      }
-    }
- 
-    function Heart(type){
-      this.type = type;
-      // 初始化生成范围
-      this.x = Math.random() * wW;
-      this.y = Math.random() * wH;
- 
-      this.opacity = Math.random() * .5 + .5;
- 
-      // 偏移量
-      this.vel = {
-        x: (Math.random() - .5) * 5,
-        y: (Math.random() - .5) * 5
-      }
- 
-      this.initialW = wW * .5;
-      this.initialH = wH * .5;
-      // 缩放比例
-      this.targetScale = Math.random() * .15 + .02; // 最小0.02
-      this.scale = Math.random() * this.targetScale;
- 
-      // 文字位置
-      this.fx = Math.random() * wW;
-      this.fy = Math.random() * wH;
-      this.fs = Math.random() * 10;
-      this.text = getText();
- 
-      this.fvel = {
-        x: (Math.random() - .5) * 5,
-        y: (Math.random() - .5) * 5,
-        f: (Math.random() - .5) * 2
-      }
-    }
- 
-    Heart.prototype.draw = function(){
-      ctx.save();
-      ctx.globalAlpha = this.opacity;
-      ctx.drawImage(heartImage, this.x, this.y, this.width, this.height);
-      ctx.scale(this.scale + 1, this.scale + 1);
-        if(!this.type){
-          // 设置文字属性
-        ctx.fillStyle = getColor();
-          ctx.font = 'italic ' + this.fs + 'px sans-serif';
-          // 填充字符串
-          ctx.fillText(this.text, this.fx, this.fy);
+    <div id="snow-container"></div>
+    <div class="heart"></div>
+    <div id="timeElapsed"></div>
+
+    <script>
+        function getTimeElapsed() {
+            var startDate = new Date("2024-07-10"); // 设置开始日期，替换为实际的起始日期
+            var currentDate = new Date();
+            var timeDiff = currentDate - startDate;
+
+            var milliseconds = timeDiff % 1000;
+            timeDiff = Math.floor(timeDiff / 1000);
+            var seconds = timeDiff % 60;
+            timeDiff = Math.floor(timeDiff / 60);
+            var minutes = timeDiff % 60;
+            timeDiff = Math.floor(timeDiff / 60);
+            var hours = timeDiff % 24;
+            timeDiff = Math.floor(timeDiff / 24);
+            var days = timeDiff;
+
+            var timeString = "宝贝我们已经在一起 " + days + " 天 " + hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒了";
+
+            document.getElementById("timeElapsed").textContent = timeString;
         }
-      ctx.restore();
-    }
-    Heart.prototype.update = function(){
-      this.x += this.vel.x;
-      this.y += this.vel.y;
- 
-      if(this.x - this.width > wW || this.x + this.width < 0){
-        // 重新初始化位置
-        this.scale = 0;
-        this.x = Math.random() * wW;
-        this.y = Math.random() * wH;
-      }
-      if(this.y - this.height > wH || this.y + this.height < 0){
-        // 重新初始化位置
-        this.scale = 0;
-        this.x = Math.random() * wW;
-        this.y = Math.random() * wH;
-      }
- 
-      // 放大
-      this.scale += (this.targetScale - this.scale) * .1;
-      this.height = this.scale * this.initialH;
-      this.width = this.height * 1.4;
- 
-      // -----文字-----
-      this.fx += this.fvel.x;
-      this.fy += this.fvel.y;
-      this.fs += this.fvel.f;
- 
-      if(this.fs > 50){
-        this.fs = 2;
-      }
- 
-      if(this.fx - this.fs > wW || this.fx + this.fs < 0){
-        // 重新初始化位置
-        this.fx = Math.random() * wW;
-        this.fy = Math.random() * wH;
-      }
-      if(this.fy - this.fs > wH || this.fy + this.fs < 0){
-        // 重新初始化位置
-        this.fx = Math.random() * wW;
-        this.fy = Math.random() * wH;
-      }
-    }
- 
-    function render(){
-      ctx.clearRect(0, 0, wW, wH);
-      for(var i = 0; i < hearts.length; i++){
-        hearts[i].draw();
-        hearts[i].update();
-      }
-      requestAnimationFrame(render);
-    }
-  </script>
+
+        setInterval(getTimeElapsed, 1000);
+    </script>
+
+    <script>
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+
+            const randomColor = getRandomColor();
+            snowflake.style.backgroundColor = randomColor;
+
+            snowflake.innerHTML = '命运之光'; // You can customize the snowflake symbol here
+
+            return snowflake;
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function snowfall() {
+            const snowContainer = document.getElementById('snow-container');
+            const numSnowflakes = 50; // Adjust the number of snowflakes here
+
+            for (let i = 0; i < numSnowflakes; i++) {
+                const snowflake = createSnowflake();
+                snowContainer.appendChild(snowflake);
+            }
+        }
+
+        snowfall();
+    </script>
+
+    <script>
+        function createSakura() {
+            var sakura = document.createElement("div");
+            sakura.className = "sakura";
+            sakura.style.left = Math.random() * 100 + "vw";
+            sakura.style.animationDelay = Math.random() * 5 + "s";
+            document.body.appendChild(sakura);
+
+            setTimeout(function () {
+                sakura.remove();
+            }, 10000);
+        }
+
+        setInterval(createSakura, 200);
+    </script>
 </body>
 </html>
-
